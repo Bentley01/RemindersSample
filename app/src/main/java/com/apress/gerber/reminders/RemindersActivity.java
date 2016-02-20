@@ -1,5 +1,6 @@
 package com.apress.gerber.reminders;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -15,6 +16,8 @@ import android.widget.ListView;
 public class RemindersActivity extends AppCompatActivity {
 
     private ListView mListView;
+    private RemindersDbAdapter mDbAdapter;
+    private RemindersSimpleCursorAdapter mCursorAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +37,33 @@ public class RemindersActivity extends AppCompatActivity {
         });
         // get id reference to the ListView
         mListView = (ListView) findViewById(R.id.reminders_list_view);
+        mListView.setDivider(null);
         // create an ArrayAdapter with context (this), layout (reminders_row) and row id (row_text),
         // and stub data to display (String[])
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.reminders_row,
                 R.id.row_text, new String[] {"first record", "second record", "third record"});
+
+
+        mDbAdapter = new RemindersDbAdapter(this);
+        mDbAdapter.open();
+
+        Cursor cursor = mDbAdapter.fetchAllReminders();
+
+        // create from columns array
+        String[] from  = new String[] { RemindersDbAdapter.COL_CONTENT };
+
+        // create to - the ids of the views in the layout
+        int[] to = new int[] { R.id.row_text };
+
+        // create a new simple cursor adapter to map from data to the to items in the reminders_row layout
+        mCursorAdapter = new RemindersSimpleCursorAdapter(RemindersActivity.this, R.layout.reminders_row, cursor, from, to, 0);
+
+
         // set the ListView to use the adapter
-        mListView.setAdapter(arrayAdapter);
+        //mListView.setAdapter(arrayAdapter);
+
+        // set the adapter to the SQL adapter, which updates the listview with the db data
+        mListView.setAdapter(mCursorAdapter);
     }
 
     @Override
