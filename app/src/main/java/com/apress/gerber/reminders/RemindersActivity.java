@@ -19,6 +19,8 @@ public class RemindersActivity extends AppCompatActivity {
     private RemindersDbAdapter mDbAdapter;
     private RemindersSimpleCursorAdapter mCursorAdapter;
 
+    // test comment
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
