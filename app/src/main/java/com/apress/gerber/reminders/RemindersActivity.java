@@ -8,11 +8,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 public class RemindersActivity extends AppCompatActivity {
 
+    private ListView mListView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminders);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -26,6 +31,14 @@ public class RemindersActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        // get id reference to the ListView
+        mListView = (ListView) findViewById(R.id.reminders_list_view);
+        // create an ArrayAdapter with context (this), layout (reminders_row) and row id (row_text),
+        // and stub data to display (String[])
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.reminders_row,
+                R.id.row_text, new String[] {"first record", "second record", "third record"});
+        // set the ListView to use the adapter
+        mListView.setAdapter(arrayAdapter);
     }
 
     @Override
